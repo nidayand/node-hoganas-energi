@@ -1,0 +1,16 @@
+{
+  "name": "node-hoganas-energi",
+  "version": "1.0.0",
+  "description": "Retrieves energi data from Hoganas Energi using your credentials",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Peter Gothager",
+  "license": "ISC",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.2",
+    "request": "^2.87.0",
+    "tabletojson": "^0.9.4"
+  }
+}
