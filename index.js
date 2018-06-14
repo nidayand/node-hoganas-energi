@@ -73,8 +73,8 @@ class henergi {
     }
 
 
-    getReport(year, month){
-        return new Promise((resolve, reject)=>{
+    getReport(year, month) {
+        return new Promise((resolve, reject) => {
             this.request(henergi.getReportUrl(this.serie, year, month), (err, resp, body) => {
                 if (err) {
                     reject(err);
@@ -91,19 +91,19 @@ class henergi {
         return 'http://elforbrukning.hoganas.se/rapport.asp?serier=' + serie + '&visning=0&aar=' + year + '&maaned=' + month + '&maanedstand=6&action=%A0K%F6r%A0%3E%3E';
     }
 
-    static cleanReport(year, month, report){
+    static cleanReport(year, month, report) {
         //Find total
         var total = 0;
-        for (var i = 0; i<report.length; i++){
-            if (report[i][0].indexOf('Total Energi')!=-1){
-                total = parseFloat(report[i][1].replace(",","."))
+        for (var i = 0; i < report.length; i++) {
+            if (report[i][0].indexOf('Total Energi') != -1) {
+                total = parseFloat(report[i][1].replace(",", "."))
             }
         }
 
         //Get days
         var _t = [];
-        for (var i = 0; i<report.length; i++){
-            if (report[i][0].match(/\d+\./) && report[i][25]!=='')
+        for (var i = 0; i < report.length; i++) {
+            if (report[i][0].match(/\d+\./) && report[i][25] !== '')
                 _t.push(report[i]);
         }
 
@@ -120,17 +120,25 @@ class henergi {
             }
         */
         var _d = [];
-        for (var i=0; i< _t.length; i++){
+        for (var i = 0; i < _t.length; i++) {
             var _h = [];
-            for (var j=1; j< 25; j++){
-                var val = parseFloat(_t[i][j].replace(",","."));
-                _h.push(isNaN(val)? 0:val);
+            for (var j = 1; j < 25; j++) {
+                var val = parseFloat(_t[i][j].replace(",", "."));
+                _h.push(isNaN(val) ? 0 : val);
             }
-            var val = parseFloat(_t[i][25].replace(",","."));
-            _d.push({hour: _h, total: isNaN(val)? 0:val});
+            var val = parseFloat(_t[i][25].replace(",", "."));
+            _d.push({
+                hour: _h,
+                total: isNaN(val) ? 0 : val
+            });
         }
 
-        return {year: year, month: month, total: total, day: _d};
+        return {
+            year: year,
+            month: month,
+            total: total,
+            day: _d
+        };
     }
 
 }
@@ -145,24 +153,29 @@ class henergi {
  * @param {number}          p2       Month of report or empty
  * @param {function}        p3       callback function or empty
  */
-var getReport = function(username, password, p1, p2, p3) {
+var getReport = function (username, password, p1, p2, p3) {
     // check if year/month is passed
     var vcallback, vyear, vmonth;
-    if (typeof p1 == 'function'){
+    if (typeof p1 == 'function') {
         vcallback = p1;
         //Get current year and month
-        vmonth = new Date().getMonth()+1;
+        vmonth = new Date().getMonth() + 1;
         vyear = new Date().getFullYear();
+    } else if (typeof p2 == 'function') {
+        vcallback = p1;
+        vyear = p2;
+        //Get current month
+        vmonth = new Date().getMonth() + 1;
     } else {
         vcallback = p3;
         vyear = p1;
-        vmonth= p2;
+        vmonth = p2;
     }
     var _r = new henergi(username, password);
 
     _r.login()
-        .then((ok)=> _r.getSerie())
-        .then((ok)=> _r.getReport(vyear, vmonth))
+        .then((ok) => _r.getSerie())
+        .then((ok) => _r.getReport(vyear, vmonth))
         .then((ok) => {
             vcallback(henergi.cleanReport(vyear, vmonth, ok));
         }, (err) => {
@@ -177,15 +190,15 @@ var getReport = function(username, password, p1, p2, p3) {
  * @param {Date}     date     Date object for specific day
  * @param {function} callback callback function for result
  */
-var getDay = function(username, password, date, callback){
+var getDay = function (username, password, date, callback) {
     var year, month, day;
-    month = date.getMonth()+1;
+    month = date.getMonth() + 1;
     year = date.getFullYear();
     day = date.getDate();
 
-    getReport(username, password, year, month, function(val){
-        val.hour = val.day[day-1].hour;
-        val.total = val.day[day-1].total;
+    getReport(username, password, year, month, function (val) {
+        val.hour = val.day[day - 1].hour;
+        val.total = val.day[day - 1].total;
         val.day = day;
         callback(val);
     });
@@ -197,12 +210,12 @@ var getDay = function(username, password, date, callback){
  * @param {string}   password Password at Höganäs Energi
  * @param {function} callback callback function
  */
-var getYesterday = function(username, password, callback){
+var getYesterday = function (username, password, callback) {
     var d;
     d = new Date();
-    d.setDate(d.getDate()-1); //Subtract one day
+    d.setDate(d.getDate() - 1); //Subtract one day
 
-    getDay(username, password, d, function(val){
+    getDay(username, password, d, function (val) {
         callback(val);
     });
 }
