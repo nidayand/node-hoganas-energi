@@ -6,6 +6,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nidayand/node-hoganas-energi.git"
+  },
   "author": "nidayand",
   "license": "ISC",
   "dependencies": {
