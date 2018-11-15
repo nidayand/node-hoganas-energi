@@ -20,7 +20,7 @@ class henergi {
         });
 
         var p_static = new Promise((resolve, reject) => {
-            self.request('http://elforbrukning.hoganas.se/default.asp', (err, resp, body) => {
+            self.request('https://elforbrukning.hoganas.se/default.asp', (err, resp, body) => {
                 if (err) {
                     reject(err);
                 } else {
@@ -29,7 +29,7 @@ class henergi {
             });
         });
         var p_login = new Promise((resolve, reject) => {
-            self.request.post('http://elforbrukning.hoganas.se/login.asp', {
+            self.request.post('https://elforbrukning.hoganas.se/login.asp', {
                 form: {
                     User: self.username,
                     Passord: self.password,
@@ -59,7 +59,7 @@ class henergi {
 
     getSerie() {
         return new Promise((resolve, reject) => {
-            this.request('http://elforbrukning.hoganas.se/startside.asp', (err, resp, body) => {
+            this.request('https://elforbrukning.hoganas.se/startside.asp', (err, resp, body) => {
                 if (err) {
                     reject(err);
                 } else {
@@ -88,7 +88,7 @@ class henergi {
     }
 
     static getReportUrl(serie, year, month) {
-        return 'http://elforbrukning.hoganas.se/rapport.asp?serier=' + serie + '&visning=0&aar=' + year + '&maaned=' + month + '&maanedstand=6&action=%A0K%F6r%A0%3E%3E';
+        return 'https://elforbrukning.hoganas.se/rapport.asp?serier=' + serie + '&visning=0&aar=' + year + '&maaned=' + month + '&maanedstand=6&action=%A0K%F6r%A0%3E%3E';
     }
 
     static cleanReport(year, month, report) {

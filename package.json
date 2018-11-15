@@ -1,6 +1,6 @@
 {
   "name": "node-hoganas-energi",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Retrieves energi data from Hoganas Energi using your credentials",
   "main": "index.js",
   "scripts": {
